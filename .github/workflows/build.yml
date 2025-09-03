@@ -8,7 +8,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # os: [ubuntu-latest, macos-13, windows-latest]
+        os: [ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -17,15 +18,15 @@ jobs:
         fetch-depth: 0    # needed for tags
 
 
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v5
       name: Install Python
       with:
-        python-version: '3.8'
+        python-version: '3.13'
 
     - name: Build wheels
       env:
-        CIBW_BUILD: "cp3{8,9,10,11}-{manylinux_x86_64,macosx_x86_64,win_amd64}"
-        CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/chatziko/libqif/manylinux:v9
+        CIBW_BUILD: "cp3{9,10,11,12,13,14}-{manylinux_x86_64,macosx_x86_64,win_amd64}"
+        CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/chatziko/libqif/manylinux:v11
         CIBW_BEFORE_ALL_LINUX: bash .github/workflows/prepare-build-linux.sh
         CIBW_BEFORE_ALL_MACOS: bash .github/workflows/prepare-build-macos.sh
         CIBW_BEFORE_ALL_WINDOWS: bash .github/workflows/prepare-build-windows.sh
@@ -47,11 +48,11 @@ jobs:
         CIBW_ENVIRONMENT_WINDOWS: "TMPDIR=. CMAKE_TOOLCHAIN_FILE='C:/vcpkg/scripts/buildsystems/vcpkg.cmake' CMAKE_PREFIX_PATH='C:/Program Files/Git/usr/local' BUILD_QIF=1"
 
       run: |
-        python -m pip install cibuildwheel==2.12.0
+        python -m pip install cibuildwheel==3.1.4
         python -m cibuildwheel --output-dir wheelhouse lib_python
         mkdir wheelhouse/dist && mv wheelhouse/*.whl wheelhouse/dist/
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         path: ./wheelhouse/
 
@@ -62,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v5
         with:
           name: artifact
 
