@@ -17,6 +17,12 @@ foreach(DIR ${SUBDIRS})
 	# for every dir 'foo' in samples, create a 'foo' executable by compiling samples/foo/*.cpp
 	#
 	file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/${DIR}/*.cpp)		# get all *.cpp files in SUBDIR
+	
+	# skip directories with no C++ source files
+	if(NOT SOURCES)
+		continue()
+	endif()
+	
 	set(DEST ${DIR})
 
 	add_executable(${DEST} ${SOURCES} ${BACKWARD_ENABLE})
