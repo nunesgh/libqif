@@ -101,7 +101,13 @@ point_to_cell(uint grid_width, eT cell_size = eT(1), Point<eT> corner = Point<eT
 template<typename eT = eT_def>
 class GridWalk {
   private:
-	struct generator : public std::iterator<std::forward_iterator_tag, Point<eT>> {
+	struct generator {
+		using iterator_category = std::forward_iterator_tag;
+		using value_type = Point<eT>;
+		using difference_type = std::ptrdiff_t;
+		using pointer = Point<eT>*;
+		using reference = Point<eT>&;
+
 	  private:
 		eT cell_size;
 		int r = 0, xd = 0, yd = 0;
