@@ -1,5 +1,5 @@
 include_guard(GLOBAL)
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.18.2) # 3.18 has modern python finder
 
 include(../misc/cmake/GlobalHead.cmake)
 project(libqif)
@@ -8,8 +8,10 @@ include(../misc/cmake/GlobalConfig.cmake)
 # If this dir is the root, we need to include qif (if not, then qif is already loaded, and add_subdirectory will do nothing)
 add_subdirectory(../lib_cpp lib_cpp)
 
-# build pybind11
-set(PYBIND11_PYTHON_VERSION 3.6)	# require at least python 3.6
+# build pybind11, FindPython mode (see https://pybind11.readthedocs.io/en/stable/compiling.html)
+set(PYBIND11_FINDPYTHON ON)
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
+
 add_subdirectory(../external/pybind11 pybind11)
 
 # build the python module inside the "qif" dir, unless CMAKE_LIBRARY_OUTPUT_DIRECTORY is set (see setup.py)
