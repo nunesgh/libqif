@@ -186,16 +186,16 @@ void QuadraticProgram<eT>::from_matrix(const arma::SpMat<eT>&P, const Col<eT>& c
 	if(P.n_rows != n_var || P.n_cols != n_var || c.n_elem != n_var || l.n_elem != n_con || u.n_elem != n_con)
 		throw std::runtime_error("invalid size");
 	
-	auto end = P.end();
-	for(auto c = P.begin(); c != end; ++c) {		// c++ throws weird warning, ++c doesn't!
+	auto Pend = P.end();
+	for(auto c = P.begin(); c != Pend; ++c) {		// c++ throws weird warning, ++c doesn't!
 		set_obj_coeff(c.row(), c.col(), *c);
 	}
 
 	using cfv = std::vector<c_float>;
 	obj_coeff_lin = arma::conv_to<cfv>::from(c);
 	
-	end = A.end();
-	for(auto c = A.begin(); c != end; ++c) {		// c++ throws weird warning, ++c doesn't!
+	auto Aend = A.end();
+	for(auto c = A.begin(); c != Aend; ++c) {		// c++ throws weird warning, ++c doesn't!
 		set_con_coeff(c.row(), c.col(), *c);
 	}
 
